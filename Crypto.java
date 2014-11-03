@@ -18,8 +18,8 @@ public class Crypto {
 		String decryptedWord;
 		
 		int[] plainText;
-		int[] encrypted;
-		int[] decrypted;
+		int[] encrypted = {};
+		int[] decrypted = {};
 	
 		
 		Scanner scan = new Scanner(System.in);
@@ -30,13 +30,13 @@ public class Crypto {
 		System.out.println("Enter prime p: ");
 		p = scan.nextLong();
 		while(!isPrime(p)){
-			System.out.println("Enter a Prime number:");
+			System.out.println("Wrong. Enter a Prime number:");
 			p = scan.nextLong();
 		}
 		System.out.println("Enter prime q: ");
 		q = scan.nextInt();
 		while(!isPrime(q)){
-			System.out.println("Enter a Prime number:");
+			System.out.println("Wrong. Enter a Prime number:");
 			q = scan.nextLong();
 		}
 		System.out.println("Thank you. Keep these primes secret.");
@@ -48,14 +48,13 @@ public class Crypto {
 		System.out.println("Pick a number e that is between 1<e<"+phi);
 		System.out.println("Would you like to see a list of comprimes? (y/n)");
 		if(scan.next().equalsIgnoreCase("y"))
-			System.out.println("ill put something here eventually");
+			System.out.println("I dont know how to find coprimes");
 			//LIST PRIMES HERE
 		System.out.println("pick a valid coprime.");
 		e = scan.nextInt();
 		
-		try{
 		d = (int)inverse((long)e,(long)phi);
-		} catch (IllegalStateException x)
+		if(d==-1)
 		{
 			System.out.println("There is no inverse for these 2 numbers: IllegalStateException");
 		}
@@ -79,12 +78,27 @@ public class Crypto {
 		}
 		System.out.println("For each value, compute (value)^" + e + " mod " + n);
 		//COMPUTE ENCRYPTED ARRAY HERE FROM PLAINTEXT
+		for(int i = 1;i<plainText.length;i++)
+		{
+			encrypted[i] = (plainText[i]^(int)e)%(int)n;
+		}
 		System.out.println("Encrypted, your message is: " /*encrypted goes here*/);
-		
+		for(int i =0;i<encrypted.length;i++)
+		{
+			System.out.print(encrypted[i] + ", ");
+		}
 		
 		System.out.println("Part 3 - RSA DECRYPTION USING THE PRIVTE KEY");
 		System.out.println("Now, for each value, compute (value)^ " + d + " mod " + n);
-		System.out.println("Decrypted, your message is: " /*decrypted array here*/);
+		for(int i = 1;i<encrypted.length;i++)
+		{
+			decrypted[i] = (encrypted[i]^(int)e)%(int)n;
+		}
+		System.out.println("Decrypted, your message is: " /*decrypted goes here*/);
+		for(int i =0;i<decrypted.length;i++)
+		{
+			System.out.print(decrypted[i] + ", ");
+		}
 		System.out.println("Converted back to text, your message is: " /*insert decryptedWord here */);
 		
 		
@@ -103,9 +117,10 @@ public class Crypto {
 	
 		public static boolean isPrime(long n)
 		{
-		for(double i =1.0;i<Math.sqrt(n);i++)
+		double m = n;
+		for(double i =2.0;i<Math.sqrt(n);i++)
 			{
-				if ((n/i)%1 == 0.0)
+				if ((m/i)%1.0 == 0.0)
 					return false;
 			}
 			return true;
@@ -146,7 +161,7 @@ public class Crypto {
 				}else
 				i++;
 				if(i>m)
-					throw IllegalStateException;
+					return-1;
 			}
 			return i;
 		}		
